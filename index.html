@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <style>
+    [v-cloak]{
+	    display: none;
+	}
+    #app{
+        height: 100vh;
+        background: rgb(35,74,147);
+        background: linear-gradient(339deg, rgba(35,74,147,1) 0%, rgba(75,18,79,1) 100%);
+    }
+  </style>
+</head>
+<body>
+  <div id="app" v-cloak>
+    <div class="bg-blue-darken-4">
+        <v-container>
+            <v-row>
+                <v-col class="text-h5">
+                    <v-icon icon="mdi-weather-partly-cloudy" class="me-5"></v-icon> 
+                    Погода.ru
+                </v-col>
+                <v-col>
+                        <v-text-field v-model="city" density="compact" variant="solo" label="Город" append-inner-icon="mdi-magnify"
+                          single-line
+                          hide-details
+                          @click:append-inner="getWeather()"
+                          v-on:keyup.enter="getWeather"
+                        ></v-text-field>
+                </v-col>
+            </v-row>
+        </v-container>
+    </div>
+    <v-container>
+        <v-card class="v-theme--dark mx-auto" max-width="700" image="card-background.jpg" theme="dark">
+            <v-card-item>
+                <h1>{{temp_city}}</h1>
+            </v-card-item>
+
+            <!-- Градус -->
+            <v-card-text class="py-0">
+                <v-row v-row no-gutters>
+                    <v-col cols="6"> 
+                        <h2 class="text-h2 mb-6 mt-5"> {{now_forecast.temp}}&deg;C </h2>
+                        <p>Ощущается как {{now_forecast.feels_like}}&deg;C </p>
+                    </v-col>
+                    <v-col cols="6" class="d-flex flex-row justify-end">
+                        <div class="w-33 align-self-end">
+                            <img :src="`http://openweathermap.org/img/w/${now_forecast.icon}.png`" alt="" width="100px">
+                            <p class="text-center">{{now_forecast.description}}</p>
+                        </div>
+                            
+                    </v-col>
+                </v-row>
+            </v-card-text>
+
+            <div class="d-flex py-3 justify-space-between">
+
+                <!-- Скорость ветра -->
+                <v-list-item density="compact" prepend-icon="mdi-weather-windy">
+                    <v-list-item-subtitle>{{now_forecast.wind}}  м/c </v-list-item-subtitle>
+                </v-list-item>
+                <!-- Давление -->
+                <!-- <v-list-item density="compact" prepend-icon="mdi-compass-outline">
+                    <v-list-item-subtitle>{{now_forecast.grnd_level}}  мм рт.ст. </v-list-item-subtitle>
+                </v-list-item> -->
+                <!-- Осадки -->
+                <v-list-item density="compact" prepend-icon="mdi-weather-pouring">
+                    <v-list-item-subtitle>{{now_forecast.humidity}}%</v-list-item-subtitle>
+                </v-list-item>
+            </div>
+
+            <v-divider></v-divider>
+
+            <v-expand-transition>
+                <div class="d-flex py-3 justify-space-around">
+                    <div class="text-center" v-for="item in forecast">
+                        <p>{{item.dt_txt?.substr(11, 5)}}</p>
+
+                        <img :src="`http://openweathermap.org/img/w/${item.weather[0].icon}.png`" alt=""><br>
+                        <p>{{Math.round(item.main.temp)}}</p>
+                    </div>
+                </div>
+            </v-expand-transition>
+            <small class="ms-5">Время указано UTС +3</small>
+        </v-card>
+    </v-container>
+  </div>
+ 
+
+  <script src="https://unpkg.com/vue@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.2/dist/vuetify.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
